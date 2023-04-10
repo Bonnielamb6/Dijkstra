@@ -35,7 +35,10 @@
     <ClInclude Include="Nodo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="algoritmo.h">
+    <ClInclude Include="Algoritmo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PilaAlgoritmo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
