@@ -90,10 +90,9 @@ int main()
                 txtFilas.typedOn(event);
                 txtColumnas.typedOn(event);
                 if ((pos.x > 5 && pos.y > 40) && ((pos.x < 5 + casillaAncho * columnas) && (pos.y < 40 + casillaAncho * filas))) {
-                    if (event.KeyPressed == sf::Keyboard::I){
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)){
                         mapa->ponerInicio(mouseX, mouseY);
-                    }
-                    if (event.KeyPressed == sf::Keyboard::F) {
+                    }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
                         mapa->ponerFinal(mouseX, mouseY);
                     }
                 }
@@ -168,6 +167,15 @@ int main()
                     txtColumnas.setSelected(false);
                 }
                 
+                if (mapa->getEstado() == 0) {
+                    if ((pos.x > 5 && pos.y > 40) && ((pos.x < 5 + casillaAncho * columnas) && (pos.y < 40 + casillaAncho * filas))) {
+                        if (event.key.code == sf::Mouse::Left) {
+                            mapa->ponerBarrera(mouseX, mouseY);
+                        }
+                        
+                    }
+                }
+
                 break;
             }
         }
@@ -177,6 +185,15 @@ int main()
 
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
+                if (mapa->matrizNodos[i][j].getInicioFinal() == 1 || mapa->matrizNodos[i][j].getInicioFinal() == -1) {
+                    casilla.setFillColor(sf::Color::Red);
+                }
+                else if (mapa->matrizNodos[i][j].getEstado() == -1) {
+                    casilla.setFillColor(sf::Color::Black);
+                }
+                else {
+                    casilla.setFillColor(sf::Color::White);
+                }
                 
                 casilla.setPosition(i * casillaAncho +5, j * casillaAncho + 40);
                 window.draw(casilla);

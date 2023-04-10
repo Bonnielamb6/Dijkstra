@@ -64,15 +64,7 @@ public:
 		return columna;
 	}
 	
-	void ponerBarrera() {
-		if (estado == -1) {
-			estado = 0;
-		}
-		else if (estado==0 || estado == 1) {
-			estado == -1;
-			
-		}
-	}
+	
 	void seleccionarNodo() {
 		if (seleccionado == 0) {
 			seleccionado = 1;
@@ -99,6 +91,7 @@ public:
 			inicioFinal = 1;
 		}
 	}
+	
 private:
 	int valor;
 	int fila;

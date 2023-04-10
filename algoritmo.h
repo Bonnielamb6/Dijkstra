@@ -17,7 +17,24 @@ public:
 		this->filas = filas;
 		this->columnas = columnas;
 		estado = 0;
+		llenarMatrizNodos();
+	}
 
+	void llenarMatrizNodos() {
+		this->matrizNodos = new Nodo * [this->filas];
+		for (int i = 0; i < this->filas; i++) {
+			this->matrizNodos[i] = new Nodo[this->columnas]; // crear un arreglo de enteros para cada fila
+
+		}
+		for (int i = 0; i < this->filas; i++) {
+			for (int j = 0; j < this->columnas; j++) {
+				this->matrizNodos[i][j].setFila(i);
+				this->matrizNodos[i][j].setColumna(j);
+				this->matrizNodos[i][j].setEstado(0);
+				this->matrizNodos[i][j].setValor(0);
+
+			}
+		}
 	}
 
 	void setEstado(int estado) {
@@ -116,6 +133,15 @@ public:
 				matrizNodos[fila + 1][columna - 1].setValor(matrizNodos[fila][columna].getValor() + 1);
 				matrizNodos[fila + 1][columna - 1].setEstado(1);
 			}
+		}
+	}
+	void ponerBarrera(int fila, int columna) {
+		if (matrizNodos[fila][columna].getEstado() == -1) {
+			matrizNodos[fila][columna].setEstado(0);
+		}
+		else if (matrizNodos[fila][columna].getEstado() == 0 || matrizNodos[fila][columna].getEstado() == 1) {
+			matrizNodos[fila][columna].setEstado(-1);
+
 		}
 	}
 
