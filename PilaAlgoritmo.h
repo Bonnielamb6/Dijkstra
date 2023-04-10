@@ -13,11 +13,12 @@ public:
 		siguiente = nullptr;
 	}
 	
-	void agregarPila(PilaAlgoritmo * &pila,Algoritmo nodoTemp) {//Cuando da click a siguiente se va a hacer un nuevo objeto de tipo algoritmo y se va a agregar aqui
+	Algoritmo agregarPila(PilaAlgoritmo*& pila,Algoritmo nodoTemp) {
 		PilaAlgoritmo* nuevo_nodo = new PilaAlgoritmo();
 		nuevo_nodo->nodo = nodoTemp;
 		nuevo_nodo->siguiente = pila;
 		pila = nuevo_nodo;
+		return nodoTemp;
 	}
 
 	Algoritmo eliminarPila(PilaAlgoritmo*& pila,Algoritmo & nodoTemp) {//Cuando da click a retroceder tendra que quitar un nodo

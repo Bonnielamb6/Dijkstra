@@ -13,8 +13,9 @@
 int main()
 {
     PilaAlgoritmo *pilaMapa;
+    pilaMapa = new PilaAlgoritmo();
     Algoritmo* mapa = new Algoritmo();
-    Algoritmo algoritmoTemp;
+    
     Nodo** mapaDibujado = new Nodo * ();
     sf::RenderWindow window;
 
@@ -89,11 +90,16 @@ int main()
             case sf::Event::TextEntered:
                 txtFilas.typedOn(event);
                 txtColumnas.typedOn(event);
-                if ((pos.x > 5 && pos.y > 40) && ((pos.x < 5 + casillaAncho * columnas) && (pos.y < 40 + casillaAncho * filas))) {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)){
-                        mapa->ponerInicio(mouseX, mouseY);
-                    }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-                        mapa->ponerFinal(mouseX, mouseY);
+                if (mapa->getEstado() == 0) {
+                    if ((pos.x > 5 && pos.y > 40) && ((pos.x < 5 + casillaAncho * columnas) && (pos.y < 40 + casillaAncho * filas))) {
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+                            mapa->ponerInicio(mouseX, mouseY);
+                            
+                        }
+                        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+                            mapa->ponerFinal(mouseX, mouseY);
+                            
+                        }
                     }
                 }
                 break;
@@ -132,7 +138,7 @@ int main()
                         //Ponerle ahora si valores a mi variable de tipo 
                         mapa = new Algoritmo(filas, columnas);//quiza falta agregarle mas cosas                            
                         mapa->setEstado(0);
-                        pilaMapa = new PilaAlgoritmo();
+                        
                     }
 
                 }
@@ -140,15 +146,24 @@ int main()
                     if (btnAvanzar.isMouseOver(window)) {
                         //avanzar al siguiente paso del algoritmo
                         //agregar el siguiente valor a la pila para guardarlo
-                        pilaMapa->agregarPila(pilaMapa, *mapa);
-                        mapa = new Algoritmo(filas, columnas);
+                        Algoritmo algoritmoTemp;
+                        algoritmoTemp = *mapa;
+                        
+                        *mapa = pilaMapa->agregarPila(pilaMapa, algoritmoTemp);
+                        //mapa->dijkstra();
+                        
+                        /*mapa = new Algoritmo(filas, columnas);
+                        *mapa = algoritmoTemp;*/
 
                     }
                     if (/*pilaMapa->returnNodo == NULL*/ true) {
                         if (btnRetroceder.isMouseOver(window)) {
                             //retroceder un paso en el algoritmo
                             //quitarle un valor a la pila para regresar uno atras
+                            
+                            
                             *mapa = pilaMapa->eliminarPila(pilaMapa, *mapa);
+                            
                         }
                     }
                     
@@ -176,7 +191,7 @@ int main()
                     }
                 }
 
-                break;
+                
             }
         }
         //igualar la variable que tendra las imagenes con la variable que tendra los valores
@@ -185,11 +200,17 @@ int main()
 
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
-                if (mapa->matrizNodos[i][j].getInicioFinal() == 1 || mapa->matrizNodos[i][j].getInicioFinal() == -1) {
+                if (mapaDibujado[i][j].getInicioFinal() == 1 || mapaDibujado[i][j].getInicioFinal() == -1) {
                     casilla.setFillColor(sf::Color::Red);
                 }
-                else if (mapa->matrizNodos[i][j].getEstado() == -1) {
+                else if (mapaDibujado[i][j].getEstado() == -1) {
                     casilla.setFillColor(sf::Color::Black);
+                }
+                else if (mapaDibujado[i][j].getSeleccionado() == 1) {
+                    casilla.setFillColor(sf::Color::Cyan);
+                }
+                else if (mapaDibujado[i][j].getEstado() == -2) {
+                    casilla.setFillColor(sf::Color::Magenta);
                 }
                 else {
                     casilla.setFillColor(sf::Color::White);

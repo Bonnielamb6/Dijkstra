@@ -73,12 +73,17 @@ public:
 			seleccionado = 0;
 		}
 	}
+	int getSeleccionado() {
+		return seleccionado;
+	}
 	void setInicio() {
 		if (inicioFinal == -1) {
 			inicioFinal = 0;
+			estado = 0;
 		}
 		else {
 			inicioFinal = -1;
+			estado = 3;
 		}
 	}
 	int getInicioFinal() {
@@ -87,11 +92,16 @@ public:
 	void setFinal() {
 		if (inicioFinal == 1) {
 			inicioFinal = 0;
+			estado = 0;
 		}else{
 			inicioFinal = 1;
+			estado = 3;
 		}
 	}
 	
+	void setInicioFinal(int inicioFinalTemp) {
+		this->inicioFinal = inicioFinalTemp;
+	}
 private:
 	int valor;
 	int fila;
@@ -99,5 +109,6 @@ private:
 	int columna;
 	int inicioFinal;//-1 si es inicio 1 es final,0 no es ninguno
 	int estado; //0 cerrado (valor infinito),1 abierto (ya tiene un valor sumado con los anteriores), -1 barrera (valor infinito), -2 si ya esta descartado
+	//3 si es inicio o final
 //	Nodo* siguiente;
 };
