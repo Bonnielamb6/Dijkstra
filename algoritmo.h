@@ -89,10 +89,14 @@ public:
 		
 		
 	}
+
 	void setActual(int fila,int columna) {
 		actual.setFila(fila);
 		actual.setColumna(columna);
+		actual.setValor(1);
+		actual.setEstado(3);
 	}
+
 	void ponerFinal(int fila, int columna) {
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
@@ -117,7 +121,12 @@ public:
 	}
 
 	void dijkstra() {
-			ponerValoresVecinos(actual.getFila(), actual.getColumna());
+		/*
+		-primero abrir todos los vecinos hasta abrir el nodo donde esta el final
+		-una vez abierto el nodo final despues de abrir todos los vecinos hasta llegar a este tendremos que aplicar el algoritmo de dijkstra
+		
+		*/
+		ponerValoresVecinos(actual.getFila(), actual.getColumna());
 		actual = obtenerMasChico();
 		actual.seleccionarNodo();
 		matrizNodos[actual.getFila()][actual.getColumna()] = actual;

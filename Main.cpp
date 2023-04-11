@@ -153,6 +153,10 @@ int main()
                         //avanzar al siguiente paso del algoritmo
                         //agregar el siguiente valor a la pila para guardarlo
                         
+                        
+                        mapa->dijkstra();
+                        pilaMapa->agregarPila(pilaMapa, *mapa);
+
                         *algoritmoTemp = *mapa;
                         *algoritmoTemp->matrizNodos = *mapa->matrizNodos;
                         for (int i = 0; i < filas; i++) {
@@ -170,9 +174,9 @@ int main()
                             }
                         }
 
-                        pilaMapa->agregarPila(pilaMapa, *mapa);
+                        
 
-                        mapa->dijkstra();
+                        
 
                         mapa = new Algoritmo(filas, columnas);
                         
