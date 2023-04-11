@@ -18,6 +18,7 @@ public:
 		this->filas = filas;
 		this->columnas = columnas;
 		estado = 0;
+		radio = 0;
 		llenarMatrizNodos();
 	}
 
@@ -126,10 +127,17 @@ public:
 		-una vez abierto el nodo final despues de abrir todos los vecinos hasta llegar a este tendremos que aplicar el algoritmo de dijkstra
 		
 		*/
-		ponerValoresVecinos(actual.getFila(), actual.getColumna());
-		actual = obtenerMasChico();
-		actual.seleccionarNodo();
-		matrizNodos[actual.getFila()][actual.getColumna()] = actual;
+
+		//ponerValoresVecinos(actual.getFila(), actual.getColumna());
+		//actual lo vamos a igualar al de arriba a la derecha del ultimo pintado, cada que tenga que volver a entrar le voy a sumar 2 a la cantidad de vueltas que tendra que dar.
+		// vamos a poner los valores en forma circular, de arriba en la derecha a abajo a la derecha, despues de la derecha a la izuquierda, de la izquierda a arriba y de arriba izquierda a derecha.
+		actual.setFila(actual.getFila() - 1);
+		actual.setColumna(actual.getColumna() + 1);
+		radio = radio + 2;
+		habilitarVecinos(radio);
+		//actual = obtenerMasChico();
+		//actual.seleccionarNodo();
+		//matrizNodos[actual.getFila()][actual.getColumna()] = actual;
 	}
 
 	void ponerValoresVecinos(int fila, int columna) {
@@ -181,6 +189,48 @@ public:
 				matrizNodos[fila + 1][columna - 1].setEstado(1);
 			}
 		}
+
+
+	}
+
+	void habilitarVecinos(int radioTemp) {
+		int i = 0;
+		//abajo, de derecha a izquierda
+		do {
+			if (matrizNodos[actual.getFila() + i + 1][actual.getColumna()].getEstado() != 3 && matrizNodos[actual.getFila() + i + 1][actual.getColumna()].getEstado() != -1) {
+				matrizNodos[actual.getFila() + i + 1][actual.getColumna()].setEstado(1);
+			}
+			i++;
+		} while (i < radioTemp);
+
+		//pinta los de la izquierda
+		i = 0;
+		do {
+			if (matrizNodos[actual.getFila()][actual.getColumna() - i].getEstado() != 3 && matrizNodos[actual.getFila()][actual.getColumna() - i].getEstado() != -1) {
+				matrizNodos[actual.getFila()][actual.getColumna() - i].setEstado(1);
+			}
+			i++;
+		} while (i < radioTemp);
+
+		i = 0;
+
+		//los de arriba
+		do {
+			if (matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].getEstado() != 3 && matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].getEstado() != -1) {
+				matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].setEstado(1);
+			}
+			i++;
+		} while (i < radioTemp);
+
+		i = 0;
+
+		do {
+			if (matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].getEstado() != 3 && matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].getEstado() != -1) {
+				matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].setEstado(1);
+			}
+			i++;
+		} while (i < radioTemp);
+		matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - radioTemp].setEstado(1);
 	}
 
 	Nodo obtenerMasChico() {
@@ -330,6 +380,14 @@ public:
 		return i;
 	}
 
+	int getRadio() {
+		return radio;
+	}
+
+	void setRadio(int radioTemp) {
+		this->radio = radioTemp;
+	}
+
 	//FUNCION DEL ALGORITMO DE DIJKSTRA SOLAMENTE UNA VEZ, SIN REDUNDANCIA PARA QUE SE HAGA PASO POR PASO
 	//primero tiene que obtener todos los valores de todos los vecinos que esten activos, y despues sumarles los valores y despues determinar cual es el mas chico
 
@@ -351,7 +409,7 @@ private:
 	int columnas;
 	Nodo inicio;
 	Nodo nodoFinal;
-	
+	int radio;
 	
 	
 };

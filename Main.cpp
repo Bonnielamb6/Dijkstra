@@ -153,12 +153,14 @@ int main()
                         //avanzar al siguiente paso del algoritmo
                         //agregar el siguiente valor a la pila para guardarlo
                         
-                        
-                        mapa->dijkstra();
                         pilaMapa->agregarPila(pilaMapa, *mapa);
-
+                       
                         *algoritmoTemp = *mapa;
                         *algoritmoTemp->matrizNodos = *mapa->matrizNodos;
+                        
+                        
+
+                        mapa->dijkstra();
                         for (int i = 0; i < filas; i++) {
                             for (int j = 0; j < columnas; j++) {
                                 algoritmoTemp->matrizNodos[i][j] = mapa->matrizNodos[i][j];
@@ -167,12 +169,14 @@ int main()
                                 if (mapa->matrizNodos[i][j].getInicioFinal() == -1) {
                                     algoritmoTemp->ponerInicio(i, j);
                                 }
-                                if(mapa->matrizNodos[i][j].getInicioFinal() == 1){
+                                if (mapa->matrizNodos[i][j].getInicioFinal() == 1) {
                                     algoritmoTemp->ponerFinal(i, j);
                                 }
                                 algoritmoTemp->actual = mapa->actual;
                             }
                         }
+                        algoritmoTemp->setRadio(mapa->getRadio());
+                        
 
                         
 
@@ -197,7 +201,8 @@ int main()
                                 mapa->actual = algoritmoTemp->actual;
                             }
                         }
-                        
+                        mapa->setRadio(algoritmoTemp->getRadio());
+
                         *algoritmoTemp = *mapa;
                         
                         //algoritmoTemp->ponerCeros();
@@ -259,7 +264,7 @@ int main()
                 else if (algoritmoTemp->matrizNodos[i][j].getEstado() == -1) {
                     casilla.setFillColor(sf::Color::Black);
                 }
-                else if (algoritmoTemp->matrizNodos[i][j].getSeleccionado() == 1) {
+                else if (algoritmoTemp->matrizNodos[i][j].getEstado() == 1) {
                     casilla.setFillColor(sf::Color::Cyan);
                 }
                 else if (algoritmoTemp->matrizNodos[i][j].getEstado() == -2) {
