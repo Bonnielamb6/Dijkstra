@@ -36,10 +36,8 @@ public:
 	}
 
 	int getValor() {
-		if (estado == 0) {//esta cerrado
-			return 999;
-		}
-		else if (estado == -1) {//es una barrera
+		
+		 if (estado == -1) {//es una barrera
 			return 999;
 		}
 		else{//esta abierto
@@ -76,6 +74,7 @@ public:
 	int getSeleccionado() {
 		return seleccionado;
 	}
+
 	void setInicio() {
 		if (inicioFinal == -1) {
 			inicioFinal = 0;
@@ -86,9 +85,11 @@ public:
 			estado = 3;
 		}
 	}
+
 	int getInicioFinal() {
 		return inicioFinal;
 	}
+
 	void setFinal() {
 		if (inicioFinal == 1) {
 			inicioFinal = 0;
@@ -102,6 +103,7 @@ public:
 	void setInicioFinal(int inicioFinalTemp) {
 		this->inicioFinal = inicioFinalTemp;
 	}
+
 private:
 	int valor;
 	int fila;

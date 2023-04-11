@@ -14,9 +14,12 @@ int main()
 {
     PilaAlgoritmo *pilaMapa;
     pilaMapa = new PilaAlgoritmo();
-    Algoritmo* mapa = new Algoritmo();
-    
-    Nodo** mapaDibujado = new Nodo * ();
+
+    Algoritmo *mapa = new Algoritmo();
+    Algoritmo* algoritmoTemp = new Algoritmo();
+
+    Nodo nodoPrueba;
+
     sf::RenderWindow window;
 
     sf::Vector2i centerWindow((sf::VideoMode::getDesktopMode().width / 2) - 445, (sf::VideoMode::getDesktopMode().height / 2) - 480);
@@ -94,7 +97,7 @@ int main()
                     if ((pos.x > 5 && pos.y > 40) && ((pos.x < 5 + casillaAncho * columnas) && (pos.y < 40 + casillaAncho * filas))) {
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
                             mapa->ponerInicio(mouseX, mouseY);
-                            
+                            mapa->setActual(mouseX, mouseY);
                         }
                         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
                             mapa->ponerFinal(mouseX, mouseY);
@@ -136,9 +139,12 @@ int main()
                         filas = std::stoi(txtFilas.getText());
                         columnas = std::stoi(txtColumnas.getText());
                         //Ponerle ahora si valores a mi variable de tipo 
-                        mapa = new Algoritmo(filas, columnas);//quiza falta agregarle mas cosas                            
+                        mapa->setFilas(filas);//quiza falta agregarle mas cosas                            
+                        mapa->setColumnas(columnas);
                         mapa->setEstado(0);
-                        
+                        mapa->llenarMatrizNodos();
+                        algoritmoTemp = mapa;
+                        algoritmoTemp->matrizNodos = mapa->matrizNodos;
                     }
 
                 }
@@ -146,15 +152,51 @@ int main()
                     if (btnAvanzar.isMouseOver(window)) {
                         //avanzar al siguiente paso del algoritmo
                         //agregar el siguiente valor a la pila para guardarlo
-                        Algoritmo algoritmoTemp;
-                        algoritmoTemp = *mapa;
                         
-                        *mapa = pilaMapa->agregarPila(pilaMapa, algoritmoTemp);
-                        //mapa->dijkstra();
-                        
-                        /*mapa = new Algoritmo(filas, columnas);
-                        *mapa = algoritmoTemp;*/
+                        *algoritmoTemp = *mapa;
+                        *algoritmoTemp->matrizNodos = *mapa->matrizNodos;
+                        for (int i = 0; i < filas; i++) {
+                            for (int j = 0; j < columnas; j++) {
+                                algoritmoTemp->matrizNodos[i][j] = mapa->matrizNodos[i][j];
+                                algoritmoTemp->matrizNodos[i][j].setEstado(mapa->matrizNodos[i][j].getEstado());
+                                algoritmoTemp->matrizNodos[i][j].setValor(mapa->matrizNodos[i][j].getValor());
+                                if (mapa->matrizNodos[i][j].getInicioFinal() == -1) {
+                                    algoritmoTemp->ponerInicio(i, j);
+                                }
+                                if(mapa->matrizNodos[i][j].getInicioFinal() == 1){
+                                    algoritmoTemp->ponerFinal(i, j);
+                                }
+                                algoritmoTemp->actual = mapa->actual;
+                            }
+                        }
 
+                        pilaMapa->agregarPila(pilaMapa, *mapa);
+
+                        mapa->dijkstra();
+
+                        mapa = new Algoritmo(filas, columnas);
+                        
+                        //mapa = algoritmoTemp;
+                        
+                        *mapa->matrizNodos = *algoritmoTemp->matrizNodos;
+                        for (int i = 0; i < filas; i++) {
+                            for (int j = 0; j < columnas; j++) {
+                                mapa->matrizNodos[i][j] = algoritmoTemp->matrizNodos[i][j];
+                                mapa->matrizNodos[i][j].setEstado(algoritmoTemp->matrizNodos[i][j].getEstado());
+                                mapa->matrizNodos[i][j].setValor(algoritmoTemp->matrizNodos[i][j].getValor());
+                                if (algoritmoTemp->matrizNodos[i][j].getInicioFinal() == -1) {
+                                    mapa->ponerInicio(i, j);
+                                }
+                                if (algoritmoTemp->matrizNodos[i][j].getInicioFinal() == 1) {
+                                    mapa->ponerFinal(i,j);
+                                }
+                                mapa->actual = algoritmoTemp->actual;
+                            }
+                        }
+                        
+                        *algoritmoTemp = *mapa;
+                        
+                        //algoritmoTemp->ponerCeros();
                     }
                     if (/*pilaMapa->returnNodo == NULL*/ true) {
                         if (btnRetroceder.isMouseOver(window)) {
@@ -163,6 +205,11 @@ int main()
                             
                             
                             *mapa = pilaMapa->eliminarPila(pilaMapa, *mapa);
+                            //algoritmoTemp->ponerCeros();
+                            algoritmoTemp = mapa;
+                            
+                            /*algoritmoTemp = pilaMapa->eliminarPila(pilaMapa, *mapa);
+                            *mapa = algoritmoTemp;*/
                             
                         }
                     }
@@ -194,22 +241,24 @@ int main()
                 
             }
         }
+        
         //igualar la variable que tendra las imagenes con la variable que tendra los valores
-        mapaDibujado = mapa->matrizNodos;
+        
         window.clear(sf::Color::Black);
-
+        
+        
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
-                if (mapaDibujado[i][j].getInicioFinal() == 1 || mapaDibujado[i][j].getInicioFinal() == -1) {
+                if (algoritmoTemp->matrizNodos[i][j].getEstado() == 3 || algoritmoTemp->matrizNodos[i][j].getEstado() == 3) {
                     casilla.setFillColor(sf::Color::Red);
                 }
-                else if (mapaDibujado[i][j].getEstado() == -1) {
+                else if (algoritmoTemp->matrizNodos[i][j].getEstado() == -1) {
                     casilla.setFillColor(sf::Color::Black);
                 }
-                else if (mapaDibujado[i][j].getSeleccionado() == 1) {
+                else if (algoritmoTemp->matrizNodos[i][j].getSeleccionado() == 1) {
                     casilla.setFillColor(sf::Color::Cyan);
                 }
-                else if (mapaDibujado[i][j].getEstado() == -2) {
+                else if (algoritmoTemp->matrizNodos[i][j].getEstado() == -2) {
                     casilla.setFillColor(sf::Color::Magenta);
                 }
                 else {

@@ -13,20 +13,21 @@ public:
 		siguiente = nullptr;
 	}
 	
-	Algoritmo agregarPila(PilaAlgoritmo*& pila,Algoritmo nodoTemp) {
+	void agregarPila(PilaAlgoritmo*& pila,Algoritmo nodoTemp) {
 		PilaAlgoritmo* nuevo_nodo = new PilaAlgoritmo();
 		nuevo_nodo->nodo = nodoTemp;
 		nuevo_nodo->siguiente = pila;
 		pila = nuevo_nodo;
-		return nodoTemp;
+		
 	}
 
 	Algoritmo eliminarPila(PilaAlgoritmo*& pila,Algoritmo & nodoTemp) {//Cuando da click a retroceder tendra que quitar un nodo
 		PilaAlgoritmo* aux = pila;
 		nodoTemp = aux->nodo;
 		pila = aux->siguiente;
-		return nodoTemp;
 		delete aux;
+		return nodoTemp;
+		
 	}
 	PilaAlgoritmo returnNodo() {
 		return nodo;

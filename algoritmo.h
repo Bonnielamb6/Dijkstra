@@ -7,6 +7,7 @@
 class Algoritmo : public Grid {
 public:
 	Nodo** matrizNodos;
+	Nodo actual;
 	Algoritmo() {
 		filas = 0;
 		columnas = 0;
@@ -32,10 +33,21 @@ public:
 				this->matrizNodos[i][j].setColumna(j);
 				this->matrizNodos[i][j].setEstado(0);
 				this->matrizNodos[i][j].setValor(0);
-				this->matrizNodos[i][j].setInicioFinal(0);
+				
 				
 			}
 		}
+	}
+
+	void ponerCeros() {
+		for (int i = 0; i < filas; i++) {
+			for (int j = 0; j < columnas; j++) {
+				matrizNodos[i][j].setInicioFinal(0);
+				matrizNodos[i][j].setEstado(0);
+			}
+		}
+		matrizNodos[inicio.getFila()][inicio.getColumna()].setInicioFinal(-1);
+		matrizNodos[nodoFinal.getFila()][nodoFinal.getColumna()].setInicioFinal(-1);
 	}
 
 	void setEstado(int estado) {
@@ -73,9 +85,14 @@ public:
 
 		matrizNodos[fila][columna].setInicio();
 		inicio = matrizNodos[fila][columna];
-		actual = inicio;
+		
+		
+		
 	}
-
+	void setActual(int fila,int columna) {
+		actual.setFila(fila);
+		actual.setColumna(columna);
+	}
 	void ponerFinal(int fila, int columna) {
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
@@ -86,7 +103,7 @@ public:
 		}
 		matrizNodos[fila][columna].setFinal();
 		
-		final = matrizNodos[fila][columna];
+		nodoFinal = matrizNodos[fila][columna];
 	}
 
 	void ponerBarrera(int fila, int columna) {
@@ -100,7 +117,7 @@ public:
 	}
 
 	void dijkstra() {
-		ponerValoresVecinos(actual.getFila(), actual.getColumna());
+			ponerValoresVecinos(actual.getFila(), actual.getColumna());
 		actual = obtenerMasChico();
 		actual.seleccionarNodo();
 		matrizNodos[actual.getFila()][actual.getColumna()] = actual;
@@ -324,8 +341,8 @@ private:
 	int filas;
 	int columnas;
 	Nodo inicio;
-	Nodo final;
-	Nodo actual;
+	Nodo nodoFinal;
+	
 	
 	
 };
