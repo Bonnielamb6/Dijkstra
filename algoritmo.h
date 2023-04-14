@@ -1,6 +1,8 @@
 #pragma once
 #include "Nodo.h"
 #include "Grid.h"
+#include <list>
+#include <vector>
 
 //Este mismo lo voy a manejar como pila
 
@@ -12,6 +14,7 @@ public:
 		filas = 0;
 		columnas = 0;
 		estado = -1;
+		ciclo = true;
 	}
 
 	Algoritmo(int filas, int columnas) {
@@ -20,6 +23,7 @@ public:
 		estado = 0;
 		radio = 0;
 		llenarMatrizNodos();
+		ciclo = true;
 	}
 
 	void llenarMatrizNodos() {
@@ -131,11 +135,33 @@ public:
 		//ponerValoresVecinos(actual.getFila(), actual.getColumna());
 		//actual lo vamos a igualar al de arriba a la derecha del ultimo pintado, cada que tenga que volver a entrar le voy a sumar 2 a la cantidad de vueltas que tendra que dar.
 		// vamos a poner los valores en forma circular, de arriba en la derecha a abajo a la derecha, despues de la derecha a la izuquierda, de la izquierda a arriba y de arriba izquierda a derecha.
-		actual.setFila(actual.getFila() - 1);
-		actual.setColumna(actual.getColumna() + 1);
-		radio = radio + 2;
-		habilitarVecinos(radio);
-		//actual = obtenerMasChico();
+		//if (actual.getColumna() + 1 < columnas || actual.getFila() - 1 >= 0) {
+		//	if (actual.getFila() - 1 >= 0) {
+		//		actual.setFila(actual.getFila() - 1);
+		//		radio = radio + 1;
+		//	}
+		//	else {
+		//		//radio = radio + 1;
+		//	}
+
+		//	if (actual.getColumna() + 1 < columnas) {
+		//		actual.setColumna(actual.getColumna() + 1);
+		//		radio = radio + 1;
+		//	}
+		//	else {
+		//		//radio = radio + 1;
+		//	}
+		//	
+		//}
+		//else {
+		//	if ((!(actual.getColumna() + 1 < columnas)) && !(actual.getFila() - 1 >= 0)) {
+		//		radio = radio + 1;
+		//	}
+		//}
+		
+		//habilitarVecinos(radio);
+		ponerValoresVecinos(actual.getFila(), actual.getColumna());
+		actual = obtenerMasChico();
 		//actual.seleccionarNodo();
 		//matrizNodos[actual.getFila()][actual.getColumna()] = actual;
 	}
@@ -195,10 +221,15 @@ public:
 
 	void habilitarVecinos(int radioTemp) {
 		int i = 0;
-		//abajo, de derecha a izquierda
+		//abajo, de izquierda a derecha
 		do {
-			if (matrizNodos[actual.getFila() + i + 1][actual.getColumna()].getEstado() != 3 && matrizNodos[actual.getFila() + i + 1][actual.getColumna()].getEstado() != -1) {
-				matrizNodos[actual.getFila() + i + 1][actual.getColumna()].setEstado(1);
+			if (actual.getFila() + i < filas) {
+				if (matrizNodos[actual.getFila() + i][actual.getColumna()].getEstado() != 3 && matrizNodos[actual.getFila() + i][actual.getColumna()].getEstado() != -1) {
+
+					matrizNodos[actual.getFila() + i][actual.getColumna()].setEstado(1);
+
+
+				}
 			}
 			i++;
 		} while (i < radioTemp);
@@ -206,8 +237,13 @@ public:
 		//pinta los de la izquierda
 		i = 0;
 		do {
-			if (matrizNodos[actual.getFila()][actual.getColumna() - i].getEstado() != 3 && matrizNodos[actual.getFila()][actual.getColumna() - i].getEstado() != -1) {
-				matrizNodos[actual.getFila()][actual.getColumna() - i].setEstado(1);
+			if (actual.getColumna() - i > 0) {
+				if (matrizNodos[actual.getFila()][actual.getColumna() - i].getEstado() != 3 && matrizNodos[actual.getFila()][actual.getColumna() - i].getEstado() != -1) {
+
+					matrizNodos[actual.getFila()][actual.getColumna() - i].setEstado(1);
+
+
+				}
 			}
 			i++;
 		} while (i < radioTemp);
@@ -216,21 +252,35 @@ public:
 
 		//los de arriba
 		do {
-			if (matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].getEstado() != 3 && matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].getEstado() != -1) {
-				matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].setEstado(1);
+			if (actual.getFila() + i < filas && actual.getColumna() - radioTemp>=0) {
+				if (matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].getEstado() != 3 && matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].getEstado() != -1) {
+
+					matrizNodos[actual.getFila() + i][actual.getColumna() - radioTemp].setEstado(1);
+
+
+				}
 			}
 			i++;
 		} while (i < radioTemp);
 
 		i = 0;
-
+		//los de la derecha
 		do {
-			if (matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].getEstado() != 3 && matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].getEstado() != -1) {
-				matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].setEstado(1);
+			if (actual.getFila() + radioTemp < filas && actual.getColumna() - radioTemp>=0) {
+				if (matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].getEstado() != 3 && matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].getEstado() != -1) {
+
+					matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - i].setEstado(1);
+
+
+				}
 			}
 			i++;
 		} while (i < radioTemp);
-		matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - radioTemp].setEstado(1);
+
+		if(actual.getFila() + radioTemp < filas && actual.getColumna() - radioTemp >= 0){
+			matrizNodos[actual.getFila() + radioTemp][actual.getColumna() - radioTemp].setEstado(1);
+		}
+		
 	}
 
 	Nodo obtenerMasChico() {
@@ -244,6 +294,7 @@ public:
 				if (tieneNodosCerrados(fila - 1, columna)) {
 					if (matrizNodos[fila - 1][columna].getValor() < temp.getValor()) {
 						temp = matrizNodos[fila - 1][columna];//copiar y pegar en todos los demas
+						return temp;
 					}
 				}
 				else {
@@ -255,6 +306,7 @@ public:
 			if (tieneNodosCerrados(fila, columna - 1)) {
 				if (matrizNodos[fila][columna-1].getValor() < temp.getValor()) {
 					temp = matrizNodos[fila][columna-1];
+					return temp;
 				}
 			}
 			else {
@@ -265,6 +317,7 @@ public:
 			if (tieneNodosCerrados(fila - 1, columna -1)) {
 				if (matrizNodos[fila - 1][columna - 1].getValor() < temp.getValor()) {
 					temp = matrizNodos[fila - 1][columna - 1];
+					return temp;
 				}
 			}
 			else {
@@ -275,6 +328,7 @@ public:
 			if (tieneNodosCerrados(fila + 1, columna)) {
 				if (matrizNodos[fila + 1][columna].getValor() < temp.getValor()) {
 					temp = matrizNodos[fila + 1][columna];
+					return temp;
 				}
 			}
 			else {
@@ -285,6 +339,7 @@ public:
 			if (tieneNodosCerrados(fila, columna + 1)) {
 				if (matrizNodos[fila][columna + 1].getValor() < temp.getValor()) {
 					temp = matrizNodos[fila][columna + 1];
+					return temp;
 				}
 			}
 			else {
@@ -295,6 +350,7 @@ public:
 			if (tieneNodosCerrados(fila + 1, columna + 1)) {
 				if (matrizNodos[fila + 1][columna + 1].getValor() < temp.getValor()) {
 					temp = matrizNodos[fila + 1][columna + 1];
+					return temp;
 				}
 			}
 			else {
@@ -305,6 +361,7 @@ public:
 			if (tieneNodosCerrados(fila - 1, columna + 1)) {
 				if (matrizNodos[fila - 1][columna + 1].getValor() < temp.getValor()) {
 					temp = matrizNodos[fila - 1][columna + 1];
+					return temp;
 				}
 			}
 			else {
@@ -315,6 +372,8 @@ public:
 			if (tieneNodosCerrados(fila + 1, columna - 1)) {
 				if (matrizNodos[fila + 1][columna - 1].getValor() < temp.getValor()) {
 					temp = matrizNodos[fila + 1][columna - 1];
+					return temp;
+					
 				}
 			}
 			else {
@@ -391,13 +450,83 @@ public:
 	//FUNCION DEL ALGORITMO DE DIJKSTRA SOLAMENTE UNA VEZ, SIN REDUNDANCIA PARA QUE SE HAGA PASO POR PASO
 	//primero tiene que obtener todos los valores de todos los vecinos que esten activos, y despues sumarles los valores y despues determinar cual es el mas chico
 
-	/*
-	*************QUIZA ESTO VA EN UNA CLASE PILA APARTE*************
-	FUNCION PARA AGREGAR NUEVO NODO A LA PILA (IR HACIA ADELANTE)
-	FUNCION PARA ELIMINAR UN VALOR DE LA PILA (IR HACIA ATRAS)
-	A
-	***************************************************************
-	*/
+	void algDijkstra() {
+		std::vector <Nodo> prioridad;
+		prioridad.push_back(matrizNodos[inicio.getFila()][inicio.getColumna()]);
+		
+		while (ciclo) {
+			int saltos = prioridad.front().getSaltos() + 1;
+			std::vector<Nodo> explorados = obtenerNodosVecinos(prioridad.front(), saltos);
+
+			if (!explorados.empty()) {
+				prioridad.erase(prioridad.begin());
+				prioridad.insert(prioridad.end(),explorados.begin(),explorados.end());
+
+				
+			}
+			else {
+				prioridad.erase(prioridad.begin());
+			}
+			//agregarAPila();
+		}
+	}
+
+	std::vector <Nodo> obtenerNodosVecinos(Nodo actualTemp, int saltosTemp) {
+		std::vector<Nodo> explorados;
+
+		for (int a = -1; a <= 1; a++) {
+			for (int b = -1; b <= 1; b++) {
+				int tempFila = actualTemp.getFila() + a;//x
+				int tempColumna = actualTemp.getColumna() + b;//y
+				if ((tempFila > -1 && tempFila < filas) && (tempColumna > -1 && tempColumna < columnas)) {
+					
+					Nodo nodoVecino = matrizNodos[tempFila][tempColumna];
+					
+
+					bool nodoValido = (nodoVecino.getSaltos() == -1 || nodoVecino.getSaltos() > saltosTemp);
+					bool noEsMuro = (nodoVecino.getEstado() != -1);
+					nodoVecino.setSaltos(saltosTemp);
+					if (nodoValido && noEsMuro) {
+						explorar(nodoVecino, actualTemp.getFila(), actualTemp.getColumna(), saltosTemp);
+						explorados.push_back(nodoVecino);
+					}
+				}
+			}
+		}
+		return explorados;
+	}
+	
+	void explorar(Nodo actualTemp, int ulX, int ulY, int saltos) {
+		if (actualTemp.getEstado() != 3 && actualTemp.getEstado() != 4) {
+			actualTemp.setVisitado();
+			matrizNodos[actualTemp.getFila()][actualTemp.getColumna()].setVisitado();
+		}
+		actualTemp.setAnterior(ulX, ulY);
+		actualTemp.setSaltos(saltos);
+		matrizNodos[actualTemp.getFila()][actualTemp.getColumna()].setSaltos(saltos);
+		matrizNodos[actualTemp.getFila()][actualTemp.getColumna()].setAnterior(ulX,ulY);
+
+		if (actualTemp.getEstado() == 4) {
+			caminoFinal(actualTemp.getAnteriorFila(), actualTemp.getAnteriorColumna(), saltos);
+		}
+	}
+
+	void caminoFinal(int ulX, int ulY, int saltos) {
+		largo = saltos;
+		while (saltos > 1) {
+			Nodo camino = matrizNodos[ulX][ulY];
+			camino.setCamino();
+			matrizNodos[ulX][ulY].setCamino();
+			ulX = camino.getAnteriorFila();
+			ulY = camino.getAnteriorColumna();
+			saltos--;
+		}
+		ciclo = false;
+	}
+
+	void agregarAPila() {
+		
+	}
 
 private:
 	int estado;//0 en ejecucion,-1 sin ejecutar, QUIZA 1 terminado (llego al destino)
@@ -410,6 +539,7 @@ private:
 	Nodo inicio;
 	Nodo nodoFinal;
 	int radio;
-	
+	int largo;
+	bool ciclo;
 	
 };

@@ -94,7 +94,7 @@ int main()
                 txtFilas.typedOn(event);
                 txtColumnas.typedOn(event);
                 if (mapa->getEstado() == 0) {
-                    if ((pos.x > 5 && pos.y > 40) && ((pos.x < 5 + casillaAncho * columnas) && (pos.y < 40 + casillaAncho * filas))) {
+                    if ((pos.x > 5 && pos.y > 40) && ((pos.x < 5 + casillaAncho * filas) && (pos.y < 40 + casillaAncho * columnas))) {
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
                             mapa->ponerInicio(mouseX, mouseY);
                             mapa->setActual(mouseX, mouseY);
@@ -160,7 +160,11 @@ int main()
                         
                         
 
-                        mapa->dijkstra();
+                        //mapa->dijkstra();
+
+                        mapa->algDijkstra();
+
+
                         for (int i = 0; i < filas; i++) {
                             for (int j = 0; j < columnas; j++) {
                                 algoritmoTemp->matrizNodos[i][j] = mapa->matrizNodos[i][j];
@@ -176,17 +180,12 @@ int main()
                             }
                         }
                         algoritmoTemp->setRadio(mapa->getRadio());
-                        
 
-                        
-
-                        
-
-                        mapa = new Algoritmo(filas, columnas);
+                       /* mapa = new Algoritmo(filas, columnas);*/
                         
                         //mapa = algoritmoTemp;
                         
-                        *mapa->matrizNodos = *algoritmoTemp->matrizNodos;
+                        /**mapa->matrizNodos = *algoritmoTemp->matrizNodos;
                         for (int i = 0; i < filas; i++) {
                             for (int j = 0; j < columnas; j++) {
                                 mapa->matrizNodos[i][j] = algoritmoTemp->matrizNodos[i][j];
@@ -201,7 +200,7 @@ int main()
                                 mapa->actual = algoritmoTemp->actual;
                             }
                         }
-                        mapa->setRadio(algoritmoTemp->getRadio());
+                        mapa->setRadio(algoritmoTemp->getRadio());*/
 
                         *algoritmoTemp = *mapa;
                         
@@ -258,7 +257,7 @@ int main()
         
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
-                if (algoritmoTemp->matrizNodos[i][j].getEstado() == 3 || algoritmoTemp->matrizNodos[i][j].getEstado() == 3) {
+                if (algoritmoTemp->matrizNodos[i][j].getEstado() == 3 || algoritmoTemp->matrizNodos[i][j].getEstado() == 4) {
                     casilla.setFillColor(sf::Color::Red);
                 }
                 else if (algoritmoTemp->matrizNodos[i][j].getEstado() == -1) {
@@ -269,6 +268,9 @@ int main()
                 }
                 else if (algoritmoTemp->matrizNodos[i][j].getEstado() == -2) {
                     casilla.setFillColor(sf::Color::Magenta);
+                }
+                else if (algoritmoTemp->matrizNodos[i][j].getEstado() == 5) {
+                    casilla.setFillColor(sf::Color::Green);
                 }
                 else {
                     casilla.setFillColor(sf::Color::White);

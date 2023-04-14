@@ -11,7 +11,8 @@ public:
 		estado = 0;
 		seleccionado = 0;
 		inicioFinal = 0;
-		//siguiente = nullptr;
+		this->saltos = -1;
+		this->distanciaFinal = 0;
 	}
 	Nodo(int valor, int fila, int columna,int estado) { //quiza poner un puntero nodo siguiente en el caso de necesitarlo
 		this->valor = valor;
@@ -20,7 +21,8 @@ public:
 		this->estado = estado;
 		this->seleccionado = seleccionado;
 		inicioFinal = 0;
-		//siguiente = &sig;
+		this->saltos = -1;
+		this->distanciaFinal = 0;
 	}
 
 	void setEstado(int estado) {
@@ -37,7 +39,7 @@ public:
 
 	int getValor() {
 		
-		 if (estado == -1) {//es una barrera
+		if (estado == -1) {//es una barrera
 			return 999;
 		}
 		else{//esta abierto
@@ -79,10 +81,12 @@ public:
 		if (inicioFinal == -1) {
 			inicioFinal = 0;
 			estado = 0;
+			saltos = -1;
 		}
 		else {
 			inicioFinal = -1;
 			estado = 3;
+			saltos = 0;
 		}
 	}
 
@@ -96,7 +100,8 @@ public:
 			estado = 0;
 		}else{
 			inicioFinal = 1;
-			estado = 3;
+			estado = 4;
+
 		}
 	}
 	
@@ -104,13 +109,61 @@ public:
 		this->inicioFinal = inicioFinalTemp;
 	}
 
+	void setCamino() {
+		estado = 5;
+	}
+
+	void setSaltos(int saltos) {
+		this->saltos = saltos;
+	}
+
+	int getSaltos() {
+		return saltos;
+	}
+
+	void setAnteriorFila(int anteriorFila) {
+		this->anteriorFila = anteriorFila;
+	}
+
+	int getAnteriorFila() {
+		return anteriorFila;
+	}
+
+	void setAnteriorColumna(int anteriorColumna) {
+		this->anteriorColumna = anteriorColumna;
+	}
+
+	int getAnteriorColumna() {
+		return anteriorColumna;
+	}
+
+	void setAnterior(int anteriorFila, int anteriorColumna) {
+		this->anteriorFila = anteriorFila;
+		this->anteriorColumna = anteriorColumna;
+	}
+
+	void setDistanciaFinal(int distanciaFinal) {
+		this->distanciaFinal = distanciaFinal;
+	}
+
+	int getDistanciaFinal() {
+		return distanciaFinal;
+	}
+
+	void setVisitado() {
+		estado = 1;
+	}
 private:
 	int valor;
 	int fila;
 	int seleccionado;//0 no esta seleccionado, 1 si esta seleccionado para colorear
 	int columna;
 	int inicioFinal;//-1 si es inicio 1 es final,0 no es ninguno
-	int estado; //0 cerrado (valor infinito),1 abierto (ya tiene un valor sumado con los anteriores), -1 barrera (valor infinito), -2 si ya esta descartado
-	//3 si es inicio o final
+	int estado; //0 cerrado (valor infinito),1 abierto (ya tiene un valor sumado con los anteriores), -1 barrera (valor infinito), -2 si ya esta visitado
+	//3 si es inicio 4 si es final 5 si ya es el camino
 //	Nodo* siguiente;
+	int anteriorFila;
+	int anteriorColumna;
+	int saltos;
+	int distanciaFinal;
 };
