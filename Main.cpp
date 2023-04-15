@@ -165,7 +165,7 @@ int main()
                         mapa->algDijkstra();
 
 
-                        for (int i = 0; i < filas; i++) {
+                        /*for (int i = 0; i < filas; i++) {
                             for (int j = 0; j < columnas; j++) {
                                 algoritmoTemp->matrizNodos[i][j] = mapa->matrizNodos[i][j];
                                 algoritmoTemp->matrizNodos[i][j].setEstado(mapa->matrizNodos[i][j].getEstado());
@@ -179,7 +179,7 @@ int main()
                                 algoritmoTemp->actual = mapa->actual;
                             }
                         }
-                        algoritmoTemp->setRadio(mapa->getRadio());
+                        algoritmoTemp->setRadio(mapa->getRadio());*/
 
                        /* mapa = new Algoritmo(filas, columnas);*/
                         
@@ -212,10 +212,11 @@ int main()
                             //quitarle un valor a la pila para regresar uno atras
                             
                             
-                            *mapa = pilaMapa->eliminarPila(pilaMapa, *mapa);
+                            //*mapa = pilaMapa->eliminarPila(pilaMapa, *mapa);
                             //algoritmoTemp->ponerCeros();
-                            algoritmoTemp = mapa;
-                            
+                            //algoritmoTemp = mapa;
+
+                            mapa->borrarUltimoElemento();
                             /*algoritmoTemp = pilaMapa->eliminarPila(pilaMapa, *mapa);
                             *mapa = algoritmoTemp;*/
                             
@@ -254,6 +255,9 @@ int main()
         
         window.clear(sf::Color::Black);
         
+            algoritmoTemp->matrizNodos = mapa->devolverUltimo();
+        
+        
         
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
@@ -270,7 +274,7 @@ int main()
                     casilla.setFillColor(sf::Color::Magenta);
                 }
                 else if (algoritmoTemp->matrizNodos[i][j].getEstado() == 5) {
-                    casilla.setFillColor(sf::Color::Green);
+                    casilla.setFillColor(sf::Color::Magenta);
                 }
                 else {
                     casilla.setFillColor(sf::Color::White);

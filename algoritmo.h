@@ -3,6 +3,7 @@
 #include "Grid.h"
 #include <list>
 #include <vector>
+#include <stack>
 
 //Este mismo lo voy a manejar como pila
 
@@ -467,7 +468,7 @@ public:
 			else {
 				prioridad.erase(prioridad.begin());
 			}
-			//agregarAPila();
+			agregarAPila();
 		}
 	}
 
@@ -519,13 +520,44 @@ public:
 			matrizNodos[ulX][ulY].setCamino();
 			ulX = camino.getAnteriorFila();
 			ulY = camino.getAnteriorColumna();
+			agregarAPila();
 			saltos--;
 		}
 		ciclo = false;
 	}
 
 	void agregarAPila() {
+		Nodo** matrizCopia;
+
+		matrizCopia = new Nodo * [this->filas];
+
+		for (int i = 0; i < this->filas; i++) {
+			matrizCopia[i] = new Nodo[this->columnas]; // crear un arreglo de enteros para cada fila
+
+		}
+
+
+		for (int i = 0;i<filas;i++) {
+			for (int j = 0;j<columnas;j++) {
+				matrizCopia[i][j].setEstado(matrizNodos[i][j].getEstado());
+				
+			}
+		}
+		pilaNodos.push(matrizCopia);
+	}
+
+	Nodo** devolverUltimo() {
+		if (!pilaNodos.empty()) {
+			return pilaNodos.top();
+		}
+		else {
+			return matrizNodos;
+		}
 		
+	}
+
+	void borrarUltimoElemento() {
+		pilaNodos.pop();
 	}
 
 private:
@@ -541,5 +573,5 @@ private:
 	int radio;
 	int largo;
 	bool ciclo;
-	
+	std::stack < Nodo** > pilaNodos;
 };
