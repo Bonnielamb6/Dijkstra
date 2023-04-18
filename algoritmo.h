@@ -470,6 +470,7 @@ public:
 			}
 			agregarAPila();
 		}
+		estado = 1;
 	}
 
 	std::vector <Nodo> obtenerNodosVecinos(Nodo actualTemp, int saltosTemp) {
@@ -557,7 +558,38 @@ public:
 	}
 
 	void borrarUltimoElemento() {
-		pilaNodos.pop();
+		if (!pilaNodos.empty()) {
+			pilaNodosBorrados.push(devolverUltimo());
+			pilaNodos.pop();
+			matrizNodos = devolverUltimo();
+		}
+
+	}
+	int estaVaciaPilaNodos() {
+		if (pilaNodos.empty()) {
+			return 1;
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	void avanzarElemento() {
+		if (!pilaNodosBorrados.empty()) {
+			pilaNodos.push(pilaNodosBorrados.top());
+			pilaNodosBorrados.pop();
+			matrizNodos = devolverUltimo();
+		}
+		
+	}
+
+	int estaVaciaPilaBorrados() {
+		if (pilaNodosBorrados.empty()) {
+			return 1;
+		}
+		else {
+			return 0;
+		}
 	}
 
 private:
@@ -574,4 +606,5 @@ private:
 	int largo;
 	bool ciclo;
 	std::stack < Nodo** > pilaNodos;
+	std::stack <Nodo**> pilaNodosBorrados;
 };
