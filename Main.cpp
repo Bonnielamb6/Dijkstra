@@ -18,7 +18,7 @@ int main()
     Algoritmo *mapa = new Algoritmo();
     Algoritmo* algoritmoTemp = new Algoritmo();
 
-    Nodo nodoPrueba;
+    Nodo** matrizCopia;
 
     sf::RenderWindow window;
 
@@ -155,14 +155,41 @@ int main()
                         
                         pilaMapa->agregarPila(pilaMapa, *mapa);
                        
-                        *algoritmoTemp = *mapa;
-                        *algoritmoTemp->matrizNodos = *mapa->matrizNodos;
                         
+                        matrizCopia = new Nodo * [filas];
+
+                        for (int i = 0; i < filas; i++) {
+                            matrizCopia[i] = new Nodo[columnas]; 
+
+                        }
+
+
+                        for (int i = 0; i < filas; i++) {
+                            for (int j = 0; j < columnas; j++) {
+                                matrizCopia[i][j].setEstado(mapa->matrizNodos[i][j].getEstado());
+
+                            }
+                        }
                         
+                        algoritmoTemp->matrizNodos = mapa->devolverUltimo();
 
                         //mapa->dijkstra();
+                        bool esDiferente = false;
 
-                        mapa->algDijkstra();
+                        while (!esDiferente) {
+
+                            mapa->algDijkstra();
+
+                            for (int i = 0;i<filas;i++) {
+                                for (int j = 0;j<columnas;j++) {
+                                    if ((mapa->matrizNodos[i][j].getEstado() != matrizCopia[i][j].getEstado()) || matrizCopia[i][j].getEstado() == 5) {
+                                        esDiferente = true;
+                                    }
+                                }
+                            }
+
+                        }
+                        
 
 
                         /*for (int i = 0; i < filas; i++) {
@@ -255,7 +282,7 @@ int main()
         
         window.clear(sf::Color::Black);
         
-            algoritmoTemp->matrizNodos = mapa->devolverUltimo();
+        algoritmoTemp->matrizNodos = mapa->devolverUltimo();
         
         
         

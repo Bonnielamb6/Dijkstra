@@ -92,7 +92,7 @@ public:
 		matrizNodos[fila][columna].setInicio();
 		inicio = matrizNodos[fila][columna];
 		
-		
+		prioridad.push_back(matrizNodos[inicio.getFila()][inicio.getColumna()]);
 		
 	}
 
@@ -452,12 +452,13 @@ public:
 	//primero tiene que obtener todos los valores de todos los vecinos que esten activos, y despues sumarles los valores y despues determinar cual es el mas chico
 
 	void algDijkstra() {
-		std::vector <Nodo> prioridad;
-		prioridad.push_back(matrizNodos[inicio.getFila()][inicio.getColumna()]);
 		
-		while (ciclo) {
+		
+
+		explorados.erase(explorados.begin(), explorados.end());
+		
 			int saltos = prioridad.front().getSaltos() + 1;
-			std::vector<Nodo> explorados = obtenerNodosVecinos(prioridad.front(), saltos);
+			explorados = obtenerNodosVecinos(prioridad.front(), saltos);
 
 			if (!explorados.empty()) {
 				prioridad.erase(prioridad.begin());
@@ -468,12 +469,13 @@ public:
 			else {
 				prioridad.erase(prioridad.begin());
 			}
+			
 			agregarAPila();
-		}
+			
 	}
 
-	std::vector <Nodo> obtenerNodosVecinos(Nodo actualTemp, int saltosTemp) {
-		std::vector<Nodo> explorados;
+	std::vector <Nodo> obtenerNodosVecinos(Nodo actualTemp, int saltosTemp) {//esta mandando saltos mal, habra que ver eso
+		std::vector<Nodo> exploradosTemp;
 
 		for (int a = -1; a <= 1; a++) {
 			for (int b = -1; b <= 1; b++) {
@@ -483,18 +485,24 @@ public:
 					
 					Nodo nodoVecino = matrizNodos[tempFila][tempColumna];
 					
+					nodoVecino.setFila(tempFila);
+					nodoVecino.setColumna(tempColumna);
+					nodoVecino.setEstado(matrizNodos[tempFila][tempColumna].getEstado());
+					
+					
+					
 
 					bool nodoValido = (nodoVecino.getSaltos() == -1 || nodoVecino.getSaltos() > saltosTemp);
 					bool noEsMuro = (nodoVecino.getEstado() != -1);
 					nodoVecino.setSaltos(saltosTemp);
 					if (nodoValido && noEsMuro) {
 						explorar(nodoVecino, actualTemp.getFila(), actualTemp.getColumna(), saltosTemp);
-						explorados.push_back(nodoVecino);
+						exploradosTemp.push_back(nodoVecino);
 					}
 				}
 			}
 		}
-		return explorados;
+  		return exploradosTemp;
 	}
 	
 	void explorar(Nodo actualTemp, int ulX, int ulY, int saltos) {
@@ -502,8 +510,10 @@ public:
 			actualTemp.setVisitado();
 			matrizNodos[actualTemp.getFila()][actualTemp.getColumna()].setVisitado();
 		}
+
 		actualTemp.setAnterior(ulX, ulY);
 		actualTemp.setSaltos(saltos);
+
 		matrizNodos[actualTemp.getFila()][actualTemp.getColumna()].setSaltos(saltos);
 		matrizNodos[actualTemp.getFila()][actualTemp.getColumna()].setAnterior(ulX,ulY);
 
@@ -513,7 +523,7 @@ public:
 	}
 
 	void caminoFinal(int ulX, int ulY, int saltos) {
-		largo = saltos;
+		
 		while (saltos > 1) {
 			Nodo camino = matrizNodos[ulX][ulY];
 			camino.setCamino();
@@ -528,21 +538,27 @@ public:
 
 	void agregarAPila() {
 		Nodo** matrizCopia;
+		
 
-		matrizCopia = new Nodo * [this->filas];
+		
+			matrizCopia = new Nodo * [this->filas];
 
-		for (int i = 0; i < this->filas; i++) {
-			matrizCopia[i] = new Nodo[this->columnas]; // crear un arreglo de enteros para cada fila
+			for (int i = 0; i < this->filas; i++) {
+				matrizCopia[i] = new Nodo[this->columnas]; 
 
-		}
-
-
-		for (int i = 0;i<filas;i++) {
-			for (int j = 0;j<columnas;j++) {
-				matrizCopia[i][j].setEstado(matrizNodos[i][j].getEstado());
-				
 			}
-		}
+
+
+			for (int i = 0; i < filas; i++) {
+				for (int j = 0; j < columnas; j++) {
+					matrizCopia[i][j].setEstado(matrizNodos[i][j].getEstado());
+
+				}
+			}
+
+
+		
+		
 		pilaNodos.push(matrizCopia);
 	}
 
@@ -558,6 +574,7 @@ public:
 
 	void borrarUltimoElemento() {
 		pilaNodos.pop();
+		matrizNodos = devolverUltimo();
 	}
 
 private:
@@ -574,4 +591,6 @@ private:
 	int largo;
 	bool ciclo;
 	std::stack < Nodo** > pilaNodos;
+	std::vector <Nodo> prioridad;
+	std::vector<Nodo> explorados;
 };
